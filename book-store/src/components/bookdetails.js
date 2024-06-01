@@ -1,15 +1,29 @@
+// bookdetails.js
 import React from 'react';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
-function BookDetails({ book }) {
-  return (
-    <div>
-      <h2>Book Details</h2>
-      <p><strong>Title:</strong> {book.title}</p>
-      <p><strong>Author:</strong> {book.author}</p>
-      <p><strong>Published Date:</strong> {book.published_date}</p>
-      <p><strong>ISBN:</strong> {book.isbn}</p>
-    </div>
-  );
-}
+const BookDetails = ({ book, onClose }) => {
+    if (!book) return null;
+
+    return (
+        <Box sx={{ p: 4 }}>
+            <Typography variant="h6" component="h2">
+                {book.title}
+            </Typography>
+            <Typography sx={{ mt: 2 }}>
+                <strong>Author:</strong> {book.author}
+            </Typography>
+            <Typography sx={{ mt: 2 }}>
+                <strong>Published Date:</strong> {book.published_date}
+            </Typography>
+            <Typography sx={{ mt: 2 }}>
+                <strong>ISBN:</strong> {book.isbn}
+            </Typography>
+            <Button onClick={onClose} sx={{ mt: 2 }}>Close</Button>
+        </Box>
+    );
+};
 
 export default BookDetails;
