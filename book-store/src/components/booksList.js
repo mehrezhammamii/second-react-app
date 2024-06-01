@@ -1,8 +1,9 @@
 // booksList.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import BookDetails from './bookdetails'; // Import the BookDetails component
+import BookDetails from './bookdetails';
 import EditBook from './editBook';
+import AddBook from './AddBook';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -17,6 +18,7 @@ function BooksList() {
     const [selectedBook, setSelectedBook] = useState(null);
     const [editingBook, setEditingBook] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
+    const [addBookOpen, setAddBookOpen] = useState(false);
 
     useEffect(() => {
         fetchBooks();
@@ -64,8 +66,19 @@ function BooksList() {
         }
     };
 
+    const handleAddSave = async (newBook) => {
+        try {
+            const response = await axios.post('http://localhost:3000/api/books/add', newBook);
+            setBooks([...books, { ...newBook, id: response.data.bookId }]);
+            setAddBookOpen(false);
+        } catch (error) {
+            console.error('Error adding book:', error);
+        }
+    };
+
     const handleClose = () => {
         setEditingBook(null);
+        setAddBookOpen(false);
     };
 
     return (
@@ -114,6 +127,11 @@ function BooksList() {
                     </Grid>
                 ))}
             </Grid>
+            <div className="add-book-container">
+                <Button variant="contained" color="primary" onClick={() => setAddBookOpen(true)}>
+                    Add Book
+                </Button>
+            </div>
             <Modal
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
@@ -131,6 +149,16 @@ function BooksList() {
                     onClose={handleClose}
                 />
             )}
+            <Modal
+                open={addBookOpen}
+                onClose={() => setAddBookOpen(false)}
+                aria-labelledby="add-book-modal-title"
+                aria-describedby="add-book-modal-description"
+            >
+                <div className="modal-content">
+                    <AddBook onSave={handleAddSave} onClose={handleClose} />
+                </div>
+            </Modal>
         </div>
     );
 }
